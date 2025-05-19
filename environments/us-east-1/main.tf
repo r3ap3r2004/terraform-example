@@ -64,17 +64,6 @@ module "s3" {
   ]
 }
 
-# EC2 Instances
-data "template_file" "web_userdata" {
-  template = file("${path.module}/../../user_data/webserver/user_data.sh")
-}
-data "template_file" "mysql_userdata" {
-  template = file("${path.module}/../../user_data/mysqlserver/user_data.sh")
-}
-data "template_file" "ssh_cloudinit" {
-  template = file("${path.module}/../../user_data/authorized_keys.yml")
-}
-
 # If you already created a key pair in the AWS console, just set:
 variable "ssh_key_name" { default = "" }
 
@@ -94,8 +83,8 @@ module "ec2_web" {
   name_prefix   = var.name_prefix
   role          = "web"
   user_data     = join("\n", [
-    data.template_file.ssh_cloudinit.rendered,
-    data.template_file.web_userdata.rendered
+    templatefile("${path.module}/../../user_data/authorized_keys.yml", {}),
+    templatefile("${path.module}/../../user_data/webserver/user_data.sh", {})
   ])
   key_name      = var.ssh_key_name != "" ? var.ssh_key_name : aws_key_pair.this.key_name
 
@@ -110,8 +99,8 @@ module "ec2_mysql" {
   name_prefix   = var.name_prefix
   role          = "mysql"
   user_data     = join("\n", [
-    data.template_file.ssh_cloudinit.rendered,
-    data.template_file.mysql_userdata.rendered
+    templatefile("${path.module}/../../user_data/authorized_keys.yml", {}),
+    templatefile("${path.module}/../../user_data/mysqlserver/user_data.sh", {})
   ])
   key_name      = var.ssh_key_name != "" ? var.ssh_key_name : aws_key_pair.this.key_name
 }

@@ -24,6 +24,37 @@ To deploy to a region other than `us-east-1` you should copy the files from `env
 
 Security Group rules can be modified in the `./sg_rules/` files.  There are separate files for ingress and egress.
 
+The code defaults to using OpenTofu, with a fallback to Terraform.
+
+OpenTofu: https://opentofu.org/
+Terraform: https://developer.hashicorp.com/terraform
+
+
+### OpenTofu Install
+
+You can install OpenTofu on an Ubuntu machine by doing:
+```bash
+# Download the installer script:
+curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+# Alternatively: wget --secure-protocol=TLSv1_2 --https-only https://get.opentofu.org/install-opentofu.sh -O install-opentofu.sh
+
+# Give it execution permissions:
+chmod +x install-opentofu.sh
+
+# Please inspect the downloaded script
+
+# Run the installer:
+./install-opentofu.sh --install-method deb
+
+# Remove the installer:
+rm -f install-opentofu.sh
+```
+
+The latest instructions can be found here: https://opentofu.org/docs/intro/install/deb/
+
+
+### Terraform Install
+
 You can install terraform on an Ubuntu machine by doing:
 ```bash
 wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
